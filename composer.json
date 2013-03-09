@@ -1,0 +1,21 @@
+{
+    "name": "splot/twig-module",
+    "description": "Twig integration with Splot Framework.",
+    "keywords": ["module", "twig", "template", "templating"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michał Dudek",
+            "email": "michal@michaldudek.pl"
+        }
+    ],
+     "require": {
+        "php": ">=5.3.3",
+        "splot/foundation": "dev-master",
+        "splot/framework": "dev-master",
+        "twig/twig": "1.*"
+    },
+    "autoload": {
+    	"psr-0": { "Splot\\TwigModule": "src/" }
+    }
+}
