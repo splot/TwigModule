@@ -12,7 +12,7 @@ namespace Splot\TwigModule;
 
 use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
-use Splot\Framework\Events\DidExecuteRoute;
+use Splot\Framework\Events\DidExecuteController;
 
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
@@ -51,30 +51,30 @@ class SplotTwigModule extends AbstractModule
         /*
          * REGISTER LISTENERS
          */
-        $this->container->get('event_manager')->subscribe(DidExecuteRoute::getName(), function($event) use ($twig) {
-            $route = $event->getRouteMeta();
-            $routeResponse = $event->getRouteResponse();
+        $this->container->get('event_manager')->subscribe(DidExecuteController::getName(), function($event) use ($twig) {
+            $route = $event->getRoute();
+            $controllerResponse = $event->getControllerResponse();
             $request = $event->getRequest();
 
-            $response = $routeResponse->getResponse();
+            $response = $controllerResponse->getResponse();
 
             if (is_array($response)) {
                 $routeName = $route->getName();
-                $routeMethodName = $route->getRouteMethodForHttpMethod($request->getMethod());
+                $controllerMethodName = $route->getControllerMethodForHttpMethod($request->getMethod());
 
-                $templateName = $routeName .':'. $routeMethodName .'.html.twig';
+                $templateName = $routeName .':'. $controllerMethodName .'.html.twig';
 
                 $view = $twig->render($templateName, $response);
-                $routeResponse->setResponse($view);
+                $controllerResponse->setResponse($view);
             } elseif (is_object($response) && $response instanceof View) {
-                $routeResponse->setResponse($response->render());
+                $controllerResponse->setResponse($response->render());
             }
         });
     }
 
-    /*
+    /*****************************************************
      * SETTERS AND GETTERS
-     */
+     *****************************************************/
     /**
      * Returns Twig.
      * 

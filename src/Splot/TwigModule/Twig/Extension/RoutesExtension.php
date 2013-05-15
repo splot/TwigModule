@@ -17,7 +17,7 @@ class RoutesExtension extends \Twig_Extension
 {
 
     /**
-     * MDKit Router.
+     * Splot Router.
      * 
      * @var Router
      */
@@ -60,7 +60,7 @@ class RoutesExtension extends \Twig_Extension
      * @return string
      */
     public function getName() {
-        return 'mdroutes';
+        return 'splot_routes';
     }
 
 }
