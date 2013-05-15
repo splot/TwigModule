@@ -12,7 +12,7 @@ namespace Splot\TwigModule;
 
 use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
-use Splot\Framework\Events\DidExecuteController;
+use Splot\Framework\Events\ControllerDidRespond;
 
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
@@ -51,7 +51,7 @@ class SplotTwigModule extends AbstractModule
         /*
          * REGISTER LISTENERS
          */
-        $this->container->get('event_manager')->subscribe(DidExecuteController::getName(), function($event) use ($twig) {
+        $this->container->get('event_manager')->subscribe(ControllerDidRespond::getName(), function($event) use ($twig) {
             $route = $event->getRoute();
             $controllerResponse = $event->getControllerResponse();
             $request = $event->getRequest();
