@@ -26,7 +26,7 @@ class RoutesExtension extends \Twig_Extension
     /**
      * Constructor.
      * 
-     * @param Router $router MDKit Router.
+     * @param Router $router Splot Router.
      */
     public function __construct(Router $router) {
         $this->_router = $router;
@@ -39,7 +39,7 @@ class RoutesExtension extends \Twig_Extension
      */
     public function getFunctions() {
         return array(
-            new \Twig_SimpleFunction('route', array($this, 'generateRouteUrl'))
+            new \Twig_SimpleFunction('url', array($this, 'generateUrl'))
         );
     }
 
@@ -50,7 +50,7 @@ class RoutesExtension extends \Twig_Extension
      * @param array $params [optional] Route parameters.
      * @return string
      */
-    public function generateRouteUrl($name, array $params = array()) {
+    public function generateUrl($name, array $params = array()) {
         return $this->_router->generate($name, $params);
     }
 
