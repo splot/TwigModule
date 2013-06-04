@@ -60,7 +60,7 @@ class TemplateLoader extends \Twig_Loader_Filesystem
         $templatePath = '';
 
         try {
-            $templatePath = $this->_finder->findResource($template, 'views');
+            $templatePath = $this->_finder->find($template, 'views');
         } catch (ResourceNotFoundException $e) {
             try {
                 $templatePath = parent::findTemplate($template);
