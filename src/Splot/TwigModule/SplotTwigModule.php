@@ -46,23 +46,17 @@ class SplotTwigModule extends AbstractModule
         View::setTwig($twig);
 
         // register Twig extension
-        $twig->addExtension(new RoutesExtension($this->container->get('router')));
+        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
 
         /*
          * REGISTER LISTENERS
          */
         $this->container->get('event_manager')->subscribe(ControllerDidRespond::getName(), function($event) use ($twig) {
-            $route = $event->getRoute();
             $controllerResponse = $event->getControllerResponse();
-            $request = $event->getRequest();
-
             $response = $controllerResponse->getResponse();
 
             if (is_array($response)) {
-                $routeName = $route->getName();
-                $controllerMethodName = $route->getControllerMethodForHttpMethod($request->getMethod());
-
-                $templateName = $routeName .':'. $controllerMethodName .'.html.twig';
+                $templateName = $event->getControllerName() .':'. $event->getMethod() .'.html.twig';
 
                 $view = $twig->render($templateName, $response);
                 $controllerResponse->setResponse($view);

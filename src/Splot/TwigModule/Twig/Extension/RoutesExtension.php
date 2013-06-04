@@ -12,9 +12,17 @@
 namespace Splot\TwigModule\Twig\Extension;
 
 use Splot\Framework\Routes\Router;
+use Splot\Framework\Application\AbstractApplication;
 
 class RoutesExtension extends \Twig_Extension
 {
+
+    /**
+     * Application instance.
+     * 
+     * @var AbstractApplication
+     */
+    protected $_application;
 
     /**
      * Splot Router.
@@ -28,7 +36,8 @@ class RoutesExtension extends \Twig_Extension
      * 
      * @param Router $router Splot Router.
      */
-    public function __construct(Router $router) {
+    public function __construct(AbstractApplication $application, Router $router) {
+        $this->_application = $application;
         $this->_router = $router;
     }
 
@@ -39,7 +48,10 @@ class RoutesExtension extends \Twig_Extension
      */
     public function getFunctions() {
         return array(
-            new \Twig_SimpleFunction('url', array($this, 'generateUrl'))
+            new \Twig_SimpleFunction('url', array($this, 'generateUrl')),
+            new \Twig_SimpleFunction('render', array($this, 'render'), array(
+                'is_safe' => array('html')
+            ))
         );
     }
 
@@ -52,6 +64,18 @@ class RoutesExtension extends \Twig_Extension
      */
     public function generateUrl($name, array $params = array()) {
         return $this->_router->generate($name, $params);
+    }
+
+    /**
+     * Renders the given controller's respone with the given arguments.
+     * 
+     * @param string $controller Name of the controller.
+     * @param array $arguments [optional] Arguments for the controller.
+     * @return string
+     */
+    public function render($controller, array $arguments = array()) {
+        $response = $this->_application->render($controller, $arguments);
+        return $response->getContent();
     }
 
     /**
