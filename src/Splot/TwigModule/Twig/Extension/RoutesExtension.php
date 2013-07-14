@@ -34,6 +34,7 @@ class RoutesExtension extends \Twig_Extension
     /**
      * Constructor.
      * 
+     * @param AbstractApplication $application Splot Application instance.
      * @param Router $router Splot Router.
      */
     public function __construct(AbstractApplication $application, Router $router) {
