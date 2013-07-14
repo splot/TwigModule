@@ -14,6 +14,7 @@ use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
 use Splot\Framework\Events\ControllerDidRespond;
 
+use Splot\TwigModule\Twig\Extension\ConfigExtension;
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
 use Splot\TwigModule\View\View;
@@ -45,7 +46,8 @@ class SplotTwigModule extends AbstractModule
 
         View::setTwig($twig);
 
-        // register Twig extension
+        // register Twig extensions
+        $twig->addExtension(new ConfigExtension($this->container->get('config')));
         $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
 
         /*
