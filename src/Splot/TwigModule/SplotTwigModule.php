@@ -13,8 +13,10 @@ namespace Splot\TwigModule;
 use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
 use Splot\Framework\Events\ControllerDidRespond;
+use Splot\Framework\Events\WillSendResponse;
 
 use Splot\TwigModule\Twig\Extension\ConfigExtension;
+use Splot\TwigModule\Twig\Extension\DataBridgeExtension;
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
 use Splot\TwigModule\View\View;
@@ -48,6 +50,8 @@ class SplotTwigModule extends AbstractModule
 
         // register Twig extensions
         $twig->addExtension(new ConfigExtension($this->container->get('config')));
+        $databridgeExtension = new DataBridgeExtension($this->container->get('databridge'));
+        $twig->addExtension($databridgeExtension);
         $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
 
         /*
@@ -65,6 +69,11 @@ class SplotTwigModule extends AbstractModule
             } elseif (is_object($response) && $response instanceof View) {
                 $controllerResponse->setResponse($response->render());
             }
+        });
+
+        $this->container->get('event_manager')->subscribe(WillSendResponse::getName(), function($event) use ($databridgeExtension) {
+            $response = $event->getResponse();
+            $response->alterPart($databridgeExtension->getPlaceholder(), $databridgeExtension->getCode());
         });
     }
 
