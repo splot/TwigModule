@@ -70,10 +70,12 @@ class SplotTwigModule extends AbstractModule
             }
         });
 
+        /*
         $this->container->get('event_manager')->subscribe(WillSendResponse::getName(), function($event) use ($databridgeExtension) {
             $response = $event->getResponse();
-            //$response->alterPart($databridgeExtension->getPlaceholder(), $databridgeExtension->getCode());
+            $response->alterPart($databridgeExtension->getPlaceholder(), $databridgeExtension->getCode());
         });
+        */
     }
 
     /*****************************************************
