@@ -37,7 +37,7 @@ class SplotTwigModule extends AbstractModule
     public function boot() {
         $loader = new TemplateLoader($this->container->get('resource_finder'));
         $this->_twig = $twig = new \Twig_Environment($loader, array(
-            'cache' => Framework::getFramework()->getCacheDir() .'twig/',
+            'cache' => $this->container->get('cache_dir') .'twig/',
             'auto_reload' => $this->getApplication()->isDevEnv()
         ));
 
