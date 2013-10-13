@@ -13,6 +13,8 @@
  */
 namespace Splot\TwigModule\Twig;
 
+use MD\Foundation\Exceptions\InvalidArgumentException;
+
 use Splot\Framework\Resources\Finder;
 use Splot\Framework\Resources\Exceptions\ResourceNotFoundException;
 
@@ -61,11 +63,18 @@ class TemplateLoader extends \Twig_Loader_Filesystem
 
         try {
             $templatePath = $this->_finder->find($template, 'views');
+        } catch (InvalidArgumentException $e) {
+            // might be already a resolved path
+            if (file_exists($template)) {
+                $templatePath = $template;
+            } else {
+                throw $e;
+            }
         } catch (ResourceNotFoundException $e) {
             try {
                 $templatePath = parent::findTemplate($template);
             } catch(\Twig_Error_Loader $twigError) {
-                throw new ResourceNotFoundException('Could not find template "'. $template .'".', 404, $e);
+                throw new ResourceNotFoundException('Could not find template "'. $template .'". (Twig: '. $twigError->getMessage() .')', 404, $e);
             }
         }
 
