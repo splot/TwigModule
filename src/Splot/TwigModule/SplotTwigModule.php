@@ -10,11 +10,14 @@
  */
 namespace Splot\TwigModule;
 
+use Twig_Environment;
+
 use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
 use Splot\Framework\Events\ControllerDidRespond;
 use Splot\Framework\Events\WillSendResponse;
 
+use Splot\TwigModule\Templating\TwigEngine;
 use Splot\TwigModule\Twig\Extension\ConfigExtension;
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
@@ -26,7 +29,7 @@ class SplotTwigModule extends AbstractModule
     /**
      * Twig instance.
      * 
-     * @var \Twig_Environment
+     * @var Twig_Environment
      */
     private $_twig;
 
@@ -35,7 +38,7 @@ class SplotTwigModule extends AbstractModule
      */
     public function boot() {
         $loader = new TemplateLoader($this->container->get('resource_finder'));
-        $this->_twig = $twig = new \Twig_Environment($loader, array(
+        $this->_twig = $twig = new Twig_Environment($loader, array(
             'cache' => $this->container->getParameter('cache_dir') .'twig/',
             'auto_reload' => $this->getApplication()->isDevEnv()
         ));
@@ -47,10 +50,13 @@ class SplotTwigModule extends AbstractModule
 
         View::setTwig($twig);
 
+        // define templating service
+        $this->container->set('templating', function($c) {
+            return new TwigEngine($c->get('twig'));
+        }, true, true);
+
         // register Twig extensions
         $twig->addExtension(new ConfigExtension($this->container->get('config')));
-        //$databridgeExtension = new DataBridgeExtension($this->container->get('databridge'));
-        //$twig->addExtension($databridgeExtension);
         $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
 
         /*
@@ -69,13 +75,6 @@ class SplotTwigModule extends AbstractModule
                 $controllerResponse->setResponse($response->render());
             }
         });
-
-        /*
-        $this->container->get('event_manager')->subscribe(WillSendResponse::getName(), function($event) use ($databridgeExtension) {
-            $response = $event->getResponse();
-            $response->alterPart($databridgeExtension->getPlaceholder(), $databridgeExtension->getCode());
-        });
-        */
     }
 
     /*****************************************************

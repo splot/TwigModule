@@ -15,10 +15,12 @@ namespace Splot\TwigModule\Twig;
 
 use MD\Foundation\Exceptions\InvalidArgumentException;
 
+use Twig_Loader_Filesystem;
+
 use Splot\Framework\Resources\Finder;
 use Splot\Framework\Resources\Exceptions\ResourceNotFoundException;
 
-class TemplateLoader extends \Twig_Loader_Filesystem
+class TemplateLoader extends Twig_Loader_Filesystem
 {
 
     /**
