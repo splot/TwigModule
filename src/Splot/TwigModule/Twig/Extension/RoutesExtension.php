@@ -50,6 +50,7 @@ class RoutesExtension extends \Twig_Extension
     public function getFunctions() {
         return array(
             new \Twig_SimpleFunction('url', array($this, 'generateUrl')),
+            new \Twig_SimpleFunction('expose_url', array($this, 'exposeUrl')),
             new \Twig_SimpleFunction('render', array($this, 'render'), array(
                 'is_safe' => array('html')
             ))
@@ -61,10 +62,21 @@ class RoutesExtension extends \Twig_Extension
      * 
      * @param string $name Name of the route.
      * @param array $params [optional] Route parameters.
+     * @param bool $includeHost [optional] Should host be included? Default: false.
      * @return string
      */
-    public function generateUrl($name, array $params = array()) {
-        return $this->_router->generate($name, $params);
+    public function generateUrl($name, array $params = array(), $includeHost = false) {
+        return $this->_router->generate($name, $params, $includeHost);
+    }
+
+    /**
+     * Exposes a route URL pattern.
+     * 
+     * @param string $name Name of the route.
+     * @return string
+     */
+    public function exposeUrl($name) {
+        return $this->_router->expose($name);
     }
 
     /**
