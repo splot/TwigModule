@@ -21,43 +21,24 @@ use Splot\TwigModule\Templating\TwigEngine;
 use Splot\TwigModule\Twig\Extension\ConfigExtension;
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
-use Splot\TwigModule\View\View;
 
 class SplotTwigModule extends AbstractModule
 {
 
-    /**
-     * Twig instance.
-     * 
-     * @var Twig_Environment
-     */
-    private $_twig;
-
-    /**
-     * Boots the module.
-     */
-    public function boot() {
+    public function configure() {
         $loader = new TemplateLoader($this->container->get('resource_finder'));
-        $this->_twig = $twig = new Twig_Environment($loader, array(
+        $twig = new Twig_Environment($loader, array(
             'cache' => $this->container->getParameter('cache_dir') .'twig/',
-            'auto_reload' => $this->getApplication()->isDevEnv()
+            'auto_reload' => $this->container->getParameter('debug')
         ));
 
-        // define Twig as a service.
-        $this->container->set('twig', function($c) use ($twig) {
-            return $twig;
-        }, true);
-
-        View::setTwig($twig);
+        // define Twig as services
+        $this->container->set('twig', $twig);
 
         // define templating service
         $this->container->set('templating', function($c) {
             return new TwigEngine($c->get('twig'));
-        }, true, true);
-
-        // register Twig extensions
-        $twig->addExtension(new ConfigExtension($this->container->get('config')));
-        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
+        });
 
         /*
          * REGISTER LISTENERS
@@ -71,22 +52,16 @@ class SplotTwigModule extends AbstractModule
 
                 $view = $twig->render($templateName, $response);
                 $controllerResponse->setResponse($view);
-            } elseif (is_object($response) && $response instanceof View) {
-                $controllerResponse->setResponse($response->render());
             }
         });
     }
 
-    /*****************************************************
-     * SETTERS AND GETTERS
-     *****************************************************/
-    /**
-     * Returns Twig.
-     * 
-     * @return \Twig_Environment
-     */
-    public function getTwig() {
-        return $this->_twig;
+    public function run() {
+        $twig = $this->container->get('twig');
+
+        // register Twig extensions
+        $twig->addExtension(new ConfigExtension($this->container->get('config')));
+        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
     }
 
 }
