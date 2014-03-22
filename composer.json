@@ -12,9 +12,15 @@
      "require": {
         "php": ">=5.3.3",
         "michaldudek/foundation": "dev-master",
-        "splot/framework": "dev-master",
+        "splot/framework": "0.5.*",
         "twig/twig": "1.*"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-release/0.5-alpha": "0.5.x-dev"
+        }
+    },
+    "minimum-stability": "dev",
     "autoload": {
     	"psr-0": { "Splot\\TwigModule": "src/" }
     }
