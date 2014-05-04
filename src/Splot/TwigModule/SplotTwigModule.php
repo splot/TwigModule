@@ -18,6 +18,7 @@ use Splot\Framework\Events\ControllerDidRespond;
 use Splot\Framework\Events\WillSendResponse;
 
 use Splot\TwigModule\Templating\TwigEngine;
+use Splot\TwigModule\Twig\Extension\AppExtension;
 use Splot\TwigModule\Twig\Extension\ConfigExtension;
 use Splot\TwigModule\Twig\Extension\RoutesExtension;
 use Splot\TwigModule\Twig\TemplateLoader;
@@ -60,6 +61,7 @@ class SplotTwigModule extends AbstractModule
         $twig = $this->container->get('twig');
 
         // register Twig extensions
+        $twig->addExtension(new AppExtension($this->container->get('application')));
         $twig->addExtension(new ConfigExtension($this->container->get('config')));
         $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
     }
