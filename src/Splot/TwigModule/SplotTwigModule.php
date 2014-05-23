@@ -27,19 +27,29 @@ class SplotTwigModule extends AbstractModule
 {
 
     public function configure() {
-        $loader = new TemplateLoader($this->container->get('resource_finder'));
-        $twig = new Twig_Environment($loader, array(
-            'cache' => $this->container->getParameter('cache_dir') .'twig/',
-            'auto_reload' => $this->container->getParameter('debug')
-        ));
+        $this->container->set('twig.template_loader', function($c) {
+            return new TemplateLoader($c->get('resource_finder'));
+        });
 
-        // define Twig as services
-        $this->container->set('twig', $twig);
+        $this->container->set('twig', function($c) {
+            return new Twig_Environment($c->get('twig.template_loader'), array(
+                'cache' => $c->getParameter('cache_dir') .'twig/',
+                'auto_reload' => $c->getParameter('debug')
+            ));
+        });
 
-        // define templating service
         $this->container->set('templating', function($c) {
             return new TwigEngine($c->get('twig'));
         });
+    }
+
+    public function run() {
+        $twig = $this->container->get('twig');
+
+        // register Twig extensions
+        $twig->addExtension(new AppExtension($this->container->get('application')));
+        $twig->addExtension(new ConfigExtension($this->container->get('config')));
+        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
 
         /*
          * REGISTER LISTENERS
@@ -55,15 +65,6 @@ class SplotTwigModule extends AbstractModule
                 $controllerResponse->setResponse($view);
             }
         });
-    }
-
-    public function run() {
-        $twig = $this->container->get('twig');
-
-        // register Twig extensions
-        $twig->addExtension(new AppExtension($this->container->get('application')));
-        $twig->addExtension(new ConfigExtension($this->container->get('config')));
-        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
     }
 
 }
