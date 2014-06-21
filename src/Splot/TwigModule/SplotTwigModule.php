@@ -11,6 +11,7 @@
 namespace Splot\TwigModule;
 
 use Twig_Environment;
+use Twig_Extension_Debug;
 
 use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
@@ -33,6 +34,7 @@ class SplotTwigModule extends AbstractModule
 
         $this->container->set('twig', function($c) {
             return new Twig_Environment($c->get('twig.template_loader'), array(
+                'debug' => $c->getParameter('debug'),
                 'cache' => $c->getParameter('cache_dir') .'twig/',
                 'auto_reload' => $c->getParameter('debug')
             ));
@@ -50,6 +52,9 @@ class SplotTwigModule extends AbstractModule
         $twig->addExtension(new AppExtension($this->container->get('application')));
         $twig->addExtension(new ConfigExtension($this->container->get('config')));
         $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
+        if ($this->container->getParameter('debug')) {
+            $twig->addExtension(new Twig_Extension_Debug());
+        }
 
         /*
          * REGISTER LISTENERS
