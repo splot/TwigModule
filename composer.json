@@ -11,13 +11,13 @@
     ],
      "require": {
         "php": ">=5.3.3",
-        "michaldudek/foundation": "dev-master",
-        "splot/framework": ">=0.6",
+        "michaldudek/foundation": "*",
+        "splot/framework": ">=0.8",
         "twig/twig": "1.*"
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.6.x-dev"
+            "dev-master": "0.8.x-dev"
         }
     },
     "minimum-stability": "dev",
