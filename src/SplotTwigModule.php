@@ -13,10 +13,8 @@ namespace Splot\TwigModule;
 use Twig_Environment;
 use Twig_Extension_Debug;
 
-use Splot\Framework\Framework;
 use Splot\Framework\Modules\AbstractModule;
 use Splot\Framework\Events\ControllerDidRespond;
-use Splot\Framework\Events\WillSendResponse;
 
 use Splot\TwigModule\Templating\TwigEngine;
 use Splot\TwigModule\Twig\Extension\AppExtension;

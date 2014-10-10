@@ -11,7 +11,7 @@
     ],
      "require": {
         "php": ">=5.3.3",
-        "michaldudek/foundation": "*",
+        "michaldudek/foundation": ">=0.9",
         "splot/framework": ">=0.8.2",
         "twig/twig": "1.*"
     },
