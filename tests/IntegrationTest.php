@@ -46,19 +46,4 @@ class IntegrationTest extends \Splot\Framework\Testing\ApplicationTestCase
         $this->assertEquals($debug, $twig->hasExtension('debug'));
     }
 
-    public function testAutoRenderingArrayControllerResponse() {
-        
-    }
-
-    /*
-    public function testListenerIsExecuted() {
-        $request = $this->getMock('Splot\Framework\HTTP\Request');
-        $response = $this->getMock('Splot\Framework\HTTP\Response');
-        $response->expects($this->atLeastOnce())
-            ->method('alterPart');
-            
-        $this->_application->sendResponse($response, $request);
-    }
-    */
-
 }
