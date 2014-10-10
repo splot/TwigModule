@@ -1,0 +1,49 @@
+services:
+
+    # framework templating service
+    templating:
+        class: Splot\TwigModule\Templating\TwigEngine
+        arguments:
+            - @twig
+
+    twig:
+        class: Twig_Environment
+        arguments:
+            - @twig.template_loader
+            - debug: %debug%
+              cache: %cache_dir%twig/
+              auto_reload: %debug%
+
+    twig.template_loader:
+        class: Splot\TwigModule\Twig\TemplateLoader
+        arguments:
+            - @resource_finder
+
+    #
+    # twig extensions
+    # 
+    twig.extension.app:
+        class: Splot\TwigModule\Twig\Extension\AppExtension
+        arguments:
+            - @application
+        private: true
+        notify:
+            - ["@twig", "addExtension", ["@"]]
+
+    twig.extension.config:
+        class: Splot\TwigModule\Twig\Extension\ConfigExtension
+        arguments:
+            - @config
+        private: true
+        notify:
+            - ["@twig", "addExtension", ["@"]]
+
+    twig.extension.routes:
+        class: Splot\TwigModule\Twig\Extension\RoutesExtension
+        arguments:
+            - @application
+            - @router
+        private: true
+        notify:
+            - ["@twig", "addExtension", ["@"]]
+

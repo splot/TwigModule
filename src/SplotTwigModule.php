@@ -10,49 +10,28 @@
  */
 namespace Splot\TwigModule;
 
-use Twig_Environment;
-use Twig_Extension_Debug;
-
 use Splot\Framework\Modules\AbstractModule;
 use Splot\Framework\Events\ControllerDidRespond;
-
-use Splot\TwigModule\Templating\TwigEngine;
-use Splot\TwigModule\Twig\Extension\AppExtension;
-use Splot\TwigModule\Twig\Extension\ConfigExtension;
-use Splot\TwigModule\Twig\Extension\RoutesExtension;
-use Splot\TwigModule\Twig\TemplateLoader;
 
 class SplotTwigModule extends AbstractModule
 {
 
     public function configure() {
-        $this->container->set('twig.template_loader', function($c) {
-            return new TemplateLoader($c->get('resource_finder'));
-        });
+        parent::configure();
 
-        $this->container->set('twig', function($c) {
-            return new Twig_Environment($c->get('twig.template_loader'), array(
-                'debug' => $c->getParameter('debug'),
-                'cache' => $c->getParameter('cache_dir') .'twig/',
-                'auto_reload' => $c->getParameter('debug')
+        if ($this->container->getParameter('debug')) {
+            $this->container->register('twig.extension.debug', array(
+                'class' => 'Twig_Extension_Debug',
+                'private' => true,
+                'notify' => array(
+                    array('@twig', 'addExtension', array('@'))
+                )
             ));
-        });
-
-        $this->container->set('templating', function($c) {
-            return new TwigEngine($c->get('twig'));
-        });
+        }
     }
 
     public function run() {
         $twig = $this->container->get('twig');
-
-        // register Twig extensions
-        $twig->addExtension(new AppExtension($this->container->get('application')));
-        $twig->addExtension(new ConfigExtension($this->container->get('config')));
-        $twig->addExtension(new RoutesExtension($this->container->get('application'), $this->container->get('router')));
-        if ($this->container->getParameter('debug')) {
-            $twig->addExtension(new Twig_Extension_Debug());
-        }
 
         /*
          * REGISTER LISTENERS
