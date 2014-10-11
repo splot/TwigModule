@@ -24,7 +24,6 @@ services:
         class: Splot\TwigModule\EventListener\ControllerResponseRenderer
         arguments:
             - @templating
-        private: true
         notify:
             - ["@event_manager", "subscribeService", ["Splot\Framework\Events\ControllerDidRespond", "twig.controller_response", "onControllerResponse"]]
 
