@@ -17,12 +17,12 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "0.8.x-dev"
+            "release/0.8-alpha": "0.8.x-dev"
         }
     },
     "minimum-stability": "dev",
     "autoload": {
-    	"psr-4": {
+        "psr-4": {
             "Splot\\TwigModule\\Tests\\": "tests/",
             "Splot\\TwigModule\\": "src/"
         }
