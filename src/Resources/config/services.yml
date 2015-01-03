@@ -46,8 +46,8 @@ services:
         notify:
             - ["@twig", "addExtension", ["@"]]
 
-    twig.extension.routes:
-        class: Splot\TwigModule\Twig\Extension\RoutesExtension
+    twig.extension.router:
+        class: Splot\TwigModule\Twig\Extension\RouterExtension
         arguments:
             - @application
             - @router

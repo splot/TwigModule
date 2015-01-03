@@ -1,12 +1,13 @@
 <?php
 /**
- * Twig routes extension to allow generation of routes URL's based on their names.
+ * Twig Router extension to allow generation of routes URL's based on their names
+ * and also expose some router parameters.
  * 
  * @package SplotTwigModule
  * @subpackage Twig
  * @author Michał Dudek <michal@michaldudek.pl>
  * 
- * @copyright Copyright (c) 2013, Michał Dudek
+ * @copyright Copyright (c) 2014, Michał Dudek
  * @license MIT
  */
 namespace Splot\TwigModule\Twig\Extension;
@@ -14,7 +15,7 @@ namespace Splot\TwigModule\Twig\Extension;
 use Splot\Framework\Routes\Router;
 use Splot\Framework\Application\AbstractApplication;
 
-class RoutesExtension extends \Twig_Extension
+class RouterExtension extends \Twig_Extension
 {
 
     /**
@@ -40,6 +41,22 @@ class RoutesExtension extends \Twig_Extension
     public function __construct(AbstractApplication $application, Router $router) {
         $this->_application = $application;
         $this->_router = $router;
+    }
+
+    /**
+     * Returns Twig global functions registered by this extension.
+     * 
+     * @return array
+     */
+    public function getGlobals() {
+        return array(
+            'router' => array(
+                'protocol' => $this->_router->getProtocol(),
+                'host' => $this->_router->getHost(),
+                'port' => $this->_router->getPort(),
+                'base' => $this->_router->getProtocolAndHost()
+            )
+        );
     }
 
     /**
@@ -97,7 +114,7 @@ class RoutesExtension extends \Twig_Extension
      * @return string
      */
     public function getName() {
-        return 'splot_routes';
+        return 'splot_router';
     }
 
 }

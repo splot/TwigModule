@@ -38,8 +38,8 @@ class IntegrationTest extends \Splot\Framework\Testing\ApplicationTestCase
         $this->assertInstanceOf('Splot\TwigModule\Twig\Extension\ConfigExtension', $twig->getExtension('splot_config'));
         
         // routes
-        $this->assertTrue($twig->hasExtension('splot_routes'));
-        $this->assertInstanceOf('Splot\TwigModule\Twig\Extension\RoutesExtension', $twig->getExtension('splot_routes'));
+        $this->assertTrue($twig->hasExtension('splot_router'));
+        $this->assertInstanceOf('Splot\TwigModule\Twig\Extension\RouterExtension', $twig->getExtension('splot_router'));
         
         // debug
         $debug = $this->_application->getContainer()->getParameter('debug');
