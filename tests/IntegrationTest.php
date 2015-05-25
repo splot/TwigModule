@@ -1,18 +1,20 @@
 <?php
 namespace Splot\TwigModule\Tests;
 
+use Splot\Framework\Testing\ApplicationTestCase;
+
 use Splot\TwigModule\SplotTwigModule;
 
-class IntegrationTest extends \Splot\Framework\Testing\ApplicationTestCase
+class IntegrationTest extends ApplicationTestCase
 {
 
     public function setUp() {
         parent::setUp();
-        $this->_application->addTestModule(new SplotTwigModule());
+        $this->application->addTestModule(new SplotTwigModule());
     }
 
     public function testTwigRegistered() {
-        $container = $this->_application->getContainer();
+        $container = $this->application->getContainer();
 
         $this->assertTrue($container->has('twig'));
 
@@ -27,7 +29,7 @@ class IntegrationTest extends \Splot\Framework\Testing\ApplicationTestCase
     }
 
     public function testTwigHasExtensions() {
-        $twig = $this->_application->getContainer()->get('twig');
+        $twig = $this->application->getContainer()->get('twig');
 
         // app
         $this->assertTrue($twig->hasExtension('splot_app'));
@@ -42,7 +44,7 @@ class IntegrationTest extends \Splot\Framework\Testing\ApplicationTestCase
         $this->assertInstanceOf('Splot\TwigModule\Twig\Extension\RouterExtension', $twig->getExtension('splot_router'));
         
         // debug
-        $debug = $this->_application->getContainer()->getParameter('debug');
+        $debug = $this->application->getContainer()->getParameter('debug');
         $this->assertEquals($debug, $twig->hasExtension('debug'));
     }
 
