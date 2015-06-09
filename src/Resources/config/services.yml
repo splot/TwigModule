@@ -27,6 +27,15 @@ services:
         notify:
             - ["@event_manager", "subscribeService", ["%event.controller_response%", "@=", "onControllerResponse"]]
 
+    # cache clearer
+    twig.cache_clearer:
+        class: Splot\TwigModule\EventListener\CacheClearer
+        arguments:
+            - @twig
+            - @filesystem
+        notify:
+            - ["@event_manager", "subscribeService", ["Splot\DevToolsModule\Events\ClearCache", "@=", "clearCache"]]
+
     #
     # twig extensions
     # 
